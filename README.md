@@ -28,8 +28,8 @@ return [
 ```yml
 # config/packages/oauth_server.yaml
 oauth_server:
-    private_key: file://%kernel.project_dir%/path/to/private.key
     encryption_key: '%env(resolve:APP_SECRET)%'
+    private_key: file://%kernel.project_dir%/path/to/private.key
     ttl:
         access_token: PT1H
         authorization_code: PT1H
