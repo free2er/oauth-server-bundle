@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Контроллер авторизации
+ * Контроллер получения ключа доступа
  */
-class AuthController
+class TokenController
 {
     /**
      * Сервер авторизации

@@ -1,0 +1,5 @@
+# Контроллер получения ключа доступа
+oauth_server_token:
+    path: /token
+    methods: POST
+    controller: Free2er\OAuth\Controller\TokenController
