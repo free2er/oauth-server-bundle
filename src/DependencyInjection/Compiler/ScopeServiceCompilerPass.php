@@ -22,7 +22,7 @@ class ScopeServiceCompilerPass implements CompilerPassInterface
     {
         $service = $container->getDefinition(ScopeService::class);
 
-        foreach (array_keys($container->findTaggedServiceIds('oauth_scope_provider')) as $provider) {
+        foreach (array_keys($container->findTaggedServiceIds('oauth_server.scope_provider')) as $provider) {
             $service->addMethodCall('addProvider', [$container->findDefinition($provider)]);
         }
     }
