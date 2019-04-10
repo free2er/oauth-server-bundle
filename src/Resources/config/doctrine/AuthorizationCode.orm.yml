@@ -1,0 +1,35 @@
+Free2er\OAuth\Entity\AuthorizationCode:
+    type: entity
+    table: oauth_code
+    repositoryClass: Free2er\OAuth\Repository\AuthorizationCodeRepository
+    id:
+        id:
+            type: string
+            length: 255
+    fields:
+        user:
+            type: string
+            length: 255
+            options:
+                default: ''
+        uri:
+            type: string
+            length: 255
+            options:
+                default: ''
+        scopes:
+            type: simple_array
+            nullable: true
+        createdAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP
+        expiredAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP
+    manyToOne:
+        client:
+            targetEntity: Free2er\OAuth\Entity\Client
+            joinColumn:
+                onDelete: CASCADE

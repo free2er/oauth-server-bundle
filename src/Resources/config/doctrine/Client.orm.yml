@@ -1,0 +1,18 @@
+Free2er\OAuth\Entity\Client:
+    type: entity
+    table: oauth_client
+    repositoryClass: Free2er\OAuth\Repository\ClientRepository
+    id:
+        id:
+            type: string
+            length: 255
+    fields:
+        uri:
+            type: string
+            length: 255
+            options:
+                default: ''
+        createdAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP

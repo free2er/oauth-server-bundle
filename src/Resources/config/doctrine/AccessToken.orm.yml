@@ -1,0 +1,30 @@
+Free2er\OAuth\Entity\AccessToken:
+    type: entity
+    table: oauth_token
+    repositoryClass: Free2er\OAuth\Repository\AccessTokenRepository
+    id:
+        id:
+            type: string
+            length: 255
+    fields:
+        user:
+            type: string
+            length: 255
+            options:
+                default: ''
+        scopes:
+            type: simple_array
+            nullable: true
+        createdAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP
+        expiredAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP
+    manyToOne:
+        client:
+            targetEntity: Free2er\OAuth\Entity\Client
+            joinColumn:
+                onDelete: CASCADE

@@ -1,0 +1,22 @@
+Free2er\OAuth\Entity\RefreshToken:
+    type: entity
+    table: oauth_refresh
+    repositoryClass: Free2er\OAuth\Repository\RefreshTokenRepository
+    id:
+        id:
+            type: string
+            length: 255
+    fields:
+        createdAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP
+        expiredAt:
+            type: datetime
+            options:
+                default: CURRENT_TIMESTAMP
+    manyToOne:
+        accessToken:
+            targetEntity: Free2er\OAuth\Entity\AccessToken
+            joinColumn:
+                onDelete: SET NULL
