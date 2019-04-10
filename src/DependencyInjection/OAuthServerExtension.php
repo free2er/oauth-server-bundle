@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Free2er\OAuth\DependencyInjection;
 
 use DateInterval;
+use Free2er\OAuth\Repository\RefreshTokenRepositoryInterface;
 use Free2er\OAuth\Service\AccessTokenService;
 use Free2er\OAuth\Service\ClientService;
 use Free2er\OAuth\Service\ScopeService;
@@ -12,6 +13,7 @@ use Lcobucci\JWT\Signer;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -132,6 +134,12 @@ class OAuthServerExtension extends Extension
      */
     private function injectRefreshTokenGrant(ContainerBuilder $container, array $config): void
     {
-        // TODO: not implemented yet
+        $refreshTokenRepository = new Reference(RefreshTokenRepositoryInterface::class);
+        $refreshTokenTTL        = new Definition(DateInterval::class, [$config['ttl']['refresh_token']]);
+
+        $grant = new Definition(RefreshTokenGrant::class, [$refreshTokenRepository]);
+        $grant->addMethodCall('setRefreshTokenTTL', [$refreshTokenTTL]);
+
+        $container->setDefinition(RefreshTokenGrant::class, $grant);
     }
 }
