@@ -66,14 +66,14 @@ class OAuthServerExtension extends Extension
      * Включает сервер авторизации
      *
      * @param ContainerBuilder $container
-     * @param array             $config
+     * @param array            $config
      */
     private function injectAuthorizationServer(ContainerBuilder $container, array $config): void
     {
         $privateKey = new Definition(CryptKey::class, [
             $config['private_key'],
             $config['private_key_password'],
-            false
+            false,
         ]);
 
         $server = new Definition(AuthorizationServer::class, [
@@ -81,7 +81,7 @@ class OAuthServerExtension extends Extension
             new Reference(AccessTokenService::class),
             new Reference(ScopeService::class),
             $privateKey,
-            $config['encryption_key']
+            $config['encryption_key'],
         ]);
 
         $accessTokenTTL = new Definition(DateInterval::class, [$config['ttl']['access_token']]);

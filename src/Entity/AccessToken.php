@@ -197,7 +197,7 @@ class AccessToken implements AccessTokenEntityInterface
      *
      * @return Token
      */
-    public function convertToJWT(CryptKey $privateKey)
+    public function convertToJwt(CryptKey $privateKey)
     {
         $builder = new Builder();
         $builder->setId($this->id, true);
