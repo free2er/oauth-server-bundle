@@ -25,12 +25,24 @@ class Configuration implements ConfigurationInterface
         $root = $builder->root('oauth_server');
         $root
             ->children()
-                ->scalarNode('public_key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('private_key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('encryption_key')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('scope_key')->defaultValue('scopes')->end()
                 ->scalarNode('algorithm')->defaultValue(Sha512::class)->end()
+                ->arrayNode('ttl')
+                    ->children()
+                        ->scalarNode('access_token')->defaultValue('PT1H')->end()
+                        ->scalarNode('authorization_code')->defaultValue('PT1H')->end()
+                        ->scalarNode('refresh_token')->defaultValue('P1M')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('grant_types')
+                    ->scalarPrototype()->cannotBeEmpty()->end()
+                ->end()
+                ->arrayNode('refresh_token')
+                    ->scalarPrototype()->cannotBeEmpty()->end()
+                ->end()
             ->end();
-
-        // TODO: not implemented yet
 
         return $builder;
     }
