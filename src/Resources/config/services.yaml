@@ -1,0 +1,41 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    # Контроллеры
+    Free2er\OAuth\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    # Репозитории
+    Free2er\OAuth\Repository\:
+        resource: '../../Repository'
+
+    # Сервисы
+    Free2er\OAuth\Service\:
+        resource: '../../Service'
+
+    # Фабрика HTTP-ответа
+    Psr\Http\Message\ResponseFactoryInterface:
+        class: Zend\Diactoros\ResponseFactory
+
+    # Фабрика HTTP-запроса
+    Psr\Http\Message\ServerRequestFactoryInterface:
+        class: Zend\Diactoros\ServerRequestFactory
+
+    # Фабрика тела HTTP-запроса
+    Psr\Http\Message\StreamFactoryInterface:
+        class: Zend\Diactoros\StreamFactory
+
+    # Фабрика файлов HTTP-запроса
+    Psr\Http\Message\UploadedFileFactoryInterface:
+        class: Zend\Diactoros\UploadedFileFactory
+
+    # Фабрика HTTP-сообщений Symfony
+    Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+
+    # Фабрика HTTP-сообщений PSR-7
+    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory

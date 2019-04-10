@@ -30,6 +30,7 @@ return [
 oauth_server:
     encryption_key: '%env(resolve:APP_SECRET)%'
     private_key: file://%kernel.project_dir%/path/to/private.key
+    private_key_password: ~ 
     ttl:
         access_token: PT1H
         authorization_code: PT1H

@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('encryption_key')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('private_key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('private_key_password')->defaultNull()->end()
                 ->scalarNode('scope_key')->defaultValue('scopes')->end()
                 ->scalarNode('algorithm')->defaultValue(Sha512::class)->end()
                 ->arrayNode('ttl')
