@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AuthorizationServerCompilerPass implements CompilerPassInterface
 {
     /**
-     * Устанавливает параметры сервис-контейнера
+     * Инициализирует сервис
      *
      * @param ContainerBuilder $container
      */

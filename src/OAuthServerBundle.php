@@ -22,5 +22,6 @@ class OAuthServerBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new DependencyInjection\Compiler\AuthorizationServerCompilerPass());
+        $container->addCompilerPass(new DependencyInjection\Compiler\ScopeServiceCompilerPass());
     }
 }
