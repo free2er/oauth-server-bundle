@@ -17,9 +17,9 @@ services:
         resource: '../../Service'
 
     # Фабрика HTTP-сообщений Symfony
-#    Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
-#        class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+    Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
 
     # Фабрика HTTP-сообщений PSR-7
-#    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface:
-#        class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
