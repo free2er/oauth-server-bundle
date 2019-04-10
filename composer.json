@@ -1,0 +1,35 @@
+{
+    "name": "free2er/oauth-server-bundle",
+    "description": "OAuth Server Bundle",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Max Pryakhin",
+            "email": "m.pryakhin@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "symfony/config": "^4.2",
+        "symfony/dependency-injection": "^4.2",
+        "symfony/http-kernel": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Free2er\\OAuth\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Free2er\\OAuth\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "free2er/coding-standard": "^1.0",
+        "phpunit/phpunit": "^8.0"
+    }
+}
