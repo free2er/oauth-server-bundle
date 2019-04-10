@@ -6,12 +6,14 @@ namespace Free2er\OAuth\DependencyInjection;
 
 use DateInterval;
 use Free2er\OAuth\Service\AccessTokenService;
+use Free2er\OAuth\Service\AuthorizationCodeService;
 use Free2er\OAuth\Service\ClientService;
 use Free2er\OAuth\Service\RefreshTokenService;
 use Free2er\OAuth\Service\ScopeService;
 use Lcobucci\JWT\Signer;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
+use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use Symfony\Component\Config\FileLocator;
@@ -123,7 +125,20 @@ class OAuthServerExtension extends Extension
      */
     private function injectAuthorizationCodeGrant(ContainerBuilder $container, array $config): void
     {
-        // TODO: not implemented yet
+        $authorizationCodeService = new Reference(AuthorizationCodeService::class);
+        $authorizationCodeTTL     = new Definition(DateInterval::class, [$config['ttl']['authorization_code']]);
+
+        $refreshTokenService = new Reference(RefreshTokenService::class);
+        $refreshTokenTTL     = new Definition(DateInterval::class, [$config['ttl']['refresh_token']]);
+
+        $grant = new Definition(AuthCodeGrant::class, [
+            $authorizationCodeService,
+            $refreshTokenService,
+            $authorizationCodeTTL,
+        ]);
+
+        $grant->addMethodCall('setRefreshTokenTTL', [$refreshTokenTTL]);
+        $container->setDefinition(AuthCodeGrant::class, $grant);
     }
 
     /**
