@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
     {
         $builder = new TreeBuilder();
 
-        $root = $builder->root('oauth_server');
+        $root = $builder->root('o_auth_server');
         $root
             ->children()
                 ->scalarNode('encryption_key')->isRequired()->cannotBeEmpty()->end()

@@ -82,7 +82,7 @@ class OAuthServerExtension extends Extension
             $config['encryption_key']
         ]);
 
-        $accessTokenTTL = new Definition(DateInterval::class, $config['ttl']['access_token']);
+        $accessTokenTTL = new Definition(DateInterval::class, [$config['ttl']['access_token']]);
 
         foreach ($config['grant_types'] as $grant) {
             $server->addMethodCall('enableGrantType', [new Reference($grant), $accessTokenTTL]);

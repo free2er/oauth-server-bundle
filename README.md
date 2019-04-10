@@ -27,7 +27,7 @@ return [
 
 ```yml
 # config/packages/oauth_server.yaml
-oauth_server:
+o_auth_server:
     encryption_key: '%env(resolve:APP_SECRET)%'
     private_key: file://%kernel.project_dir%/path/to/private.key
     private_key_password: ~ 
