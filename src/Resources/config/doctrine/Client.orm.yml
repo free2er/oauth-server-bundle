@@ -7,12 +7,26 @@ Free2er\OAuth\Entity\Client:
             type: string
             length: 255
     fields:
+        secret:
+            type: string
+            length: 255
+            options:
+                default: ''
         uri:
             type: string
             length: 255
             options:
                 default: ''
+        grants:
+            type: simple_array
+            nullable: true
+        scopes:
+            type: simple_array
+            nullable: true
         createdAt:
             type: datetime
             options:
                 default: CURRENT_TIMESTAMP
+        lockedAt:
+            type: datetime
+            nullable: true

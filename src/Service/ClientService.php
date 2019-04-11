@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Free2er\OAuth\Service;
 
+use Free2er\OAuth\Entity\Client;
 use Free2er\OAuth\Repository\ClientRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface as OAuthClientServiceInterface;
@@ -11,7 +12,7 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface as OAuthClientSe
 /**
  * Сервис клиентов
  */
-class ClientService implements OAuthClientServiceInterface
+class ClientService implements OAuthClientServiceInterface, ClientServiceInterface, ScopeProviderInterface
 {
     /**
      * Репозиторий клиентов
@@ -33,6 +34,18 @@ class ClientService implements OAuthClientServiceInterface
     /**
      * Возвращает клиента
      *
+     * @param string $id
+     *
+     * @return Client|null
+     */
+    public function getClient(string $id): ?Client
+    {
+        return $this->repository->getClient($id);
+    }
+
+    /**
+     * Возвращает клиента
+     *
      * @param string      $id
      * @param string|null $grant
      * @param string|null $secret
@@ -42,7 +55,40 @@ class ClientService implements OAuthClientServiceInterface
      */
     public function getClientEntity($id, $grant = null, $secret = null, $mustValidateSecret = true)
     {
-        // TODO: check grant and secret
-        return $this->repository->getClient($id);
+        if (!$client = $this->getClient((string) $id)) {
+            return null;
+        }
+
+        if ($client->isLocked()) {
+            return null;
+        }
+
+        if ($grant && !$client->hasGrant((string) $grant)) {
+            return null;
+        }
+
+        if ($mustValidateSecret && !$client->verifySecret((string) $secret)) {
+            return null;
+        }
+
+        return $client;
+    }
+
+    /**
+     * Возвращает права доступа
+     *
+     * @param string   $client
+     * @param string   $user
+     * @param string[] $requestedScopes
+     *
+     * @return string[]
+     */
+    public function getScopes(string $client, string $user, array $requestedScopes): array
+    {
+        if (!$client = $this->getClient($client)) {
+            return [];
+        }
+
+        return $client->getScopes();
     }
 }

@@ -16,6 +16,10 @@ services:
     Free2er\OAuth\Service\:
         resource: '../../Service'
 
+    # Сервис клиентов
+    Free2er\OAuth\Service\ClientService:
+        tags: ['oauth_server.scope_provider']
+
     # Фабрика HTTP-сообщений Symfony
     Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
         class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
