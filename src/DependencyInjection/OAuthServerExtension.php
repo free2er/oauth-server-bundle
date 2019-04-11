@@ -44,11 +44,12 @@ class OAuthServerExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $this->injectSigner($container, $config);
+        $this->injectTTL($container, $config);
         $this->injectAuthorizationServer($container, $config);
         $this->injectClientCredentialsGrant($container);
-        $this->injectPasswordGrant($container, $config);
-        $this->injectAuthorizationCodeGrant($container, $config);
-        $this->injectRefreshTokenGrant($container, $config);
+        $this->injectPasswordGrant($container);
+        $this->injectAuthorizationCodeGrant($container);
+        $this->injectRefreshTokenGrant($container);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
@@ -64,6 +65,22 @@ class OAuthServerExtension extends Extension
     {
         $signer = new Definition($config['algorithm']);
         $container->setDefinition(Signer::class, $signer);
+    }
+
+    /**
+     * Включает сроки действия ключей доступа
+     *
+     * @param ContainerBuilder $container
+     * @param array            $config
+     */
+    private function injectTTL(ContainerBuilder $container, array $config): void
+    {
+        foreach ($config['ttl'] as $name => $time) {
+            $name = sprintf('oauth_server.%s_ttl', $name);
+            $time = new Definition(DateInterval::class, [$time]);
+
+            $container->setDefinition($name, $time);
+        }
     }
 
     /**
@@ -88,10 +105,11 @@ class OAuthServerExtension extends Extension
             $config['encryption_key'],
         ]);
 
-        $accessTokenTTL = new Definition(DateInterval::class, [$config['ttl']['access_token']]);
-
         foreach ($config['grants'] as $grant) {
-            $server->addMethodCall('enableGrantType', [new Reference($grant), $accessTokenTTL]);
+            $server->addMethodCall('enableGrantType', [
+                new Reference($grant),
+                new Reference('oauth_server.access_token_ttl'),
+            ]);
         }
 
         $container->setDefinition(AuthorizationServer::class, $server);
@@ -112,20 +130,17 @@ class OAuthServerExtension extends Extension
      * Включает авторизацию пользователей
      *
      * @param ContainerBuilder $container
-     * @param array            $config
      */
-    private function injectPasswordGrant(ContainerBuilder $container, array $config): void
+    private function injectPasswordGrant(ContainerBuilder $container): void
     {
-        $userService         = new Reference(UserService::class);
-        $refreshTokenService = new Reference(RefreshTokenService::class);
-        $refreshTokenTTL     = new Definition(DateInterval::class, [$config['ttl']['refresh_token']]);
+        $dependencies = [
+            new Reference(UserService::class),
+            new Reference(RefreshTokenService::class),
+        ];
 
-        $grant = new Definition(PasswordGrant::class, [
-            $userService,
-            $refreshTokenService,
-        ]);
+        $grant = new Definition(PasswordGrant::class, $dependencies);
+        $grant->addTag('oauth_server.refresh_token');
 
-        $grant->addMethodCall('setRefreshTokenTTL', [$refreshTokenTTL]);
         $container->setDefinition(PasswordGrant::class, $grant);
     }
 
@@ -133,23 +148,18 @@ class OAuthServerExtension extends Extension
      * Включает авторизацию пользователей по коду авторизации
      *
      * @param ContainerBuilder $container
-     * @param array            $config
      */
-    private function injectAuthorizationCodeGrant(ContainerBuilder $container, array $config): void
+    private function injectAuthorizationCodeGrant(ContainerBuilder $container): void
     {
-        $authorizationCodeService = new Reference(AuthorizationCodeService::class);
-        $authorizationCodeTTL     = new Definition(DateInterval::class, [$config['ttl']['authorization_code']]);
+        $dependencies = [
+            new Reference(AuthorizationCodeService::class),
+            new Reference(RefreshTokenService::class),
+            new Reference('oauth_server.authorization_code_ttl'),
+        ];
 
-        $refreshTokenService = new Reference(RefreshTokenService::class);
-        $refreshTokenTTL     = new Definition(DateInterval::class, [$config['ttl']['refresh_token']]);
+        $grant = new Definition(AuthCodeGrant::class, $dependencies);
+        $grant->addTag('oauth_server.refresh_token');
 
-        $grant = new Definition(AuthCodeGrant::class, [
-            $authorizationCodeService,
-            $refreshTokenService,
-            $authorizationCodeTTL,
-        ]);
-
-        $grant->addMethodCall('setRefreshTokenTTL', [$refreshTokenTTL]);
         $container->setDefinition(AuthCodeGrant::class, $grant);
     }
 
@@ -157,15 +167,13 @@ class OAuthServerExtension extends Extension
      * Включает продление срока действия ключа доступа
      *
      * @param ContainerBuilder $container
-     * @param array            $config
      */
-    private function injectRefreshTokenGrant(ContainerBuilder $container, array $config): void
+    private function injectRefreshTokenGrant(ContainerBuilder $container): void
     {
-        $refreshTokenService = new Reference(RefreshTokenService::class);
-        $refreshTokenTTL     = new Definition(DateInterval::class, [$config['ttl']['refresh_token']]);
+        $dependencies = [new Reference(RefreshTokenService::class)];
 
-        $grant = new Definition(RefreshTokenGrant::class, [$refreshTokenService]);
-        $grant->addMethodCall('setRefreshTokenTTL', [$refreshTokenTTL]);
+        $grant = new Definition(RefreshTokenGrant::class, $dependencies);
+        $grant->addTag('oauth_server.refresh_token');
 
         $container->setDefinition(RefreshTokenGrant::class, $grant);
     }
