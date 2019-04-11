@@ -1,5 +1,5 @@
 # oauth-server-bundle
-Symfony bundle which provides OAuth 2.0 authorization server capabilities. The authorization implemented using the [thephpleague/oauth2-server](https://github.com/thephpleague/oauth2-server) library.
+Symfony bundle which provides OAuth 2.0 authorization server capabilities. The authorization server implemented using the [thephpleague/oauth2-server](https://github.com/thephpleague/oauth2-server) library.
 
 ## Installation
 This component can be installed with the [Composer](https://getcomposer.org/) dependency manager.
