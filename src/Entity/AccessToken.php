@@ -34,6 +34,13 @@ class AccessToken implements AccessTokenEntityInterface
     private $user = '';
 
     /**
+     * Параметры JWT
+     *
+     * @var string[]
+     */
+    private $claims = [];
+
+    /**
      * Права доступа
      *
      * @var string[]
@@ -71,13 +78,15 @@ class AccessToken implements AccessTokenEntityInterface
     /**
      * Конструктор
      *
-     * @param Signer $signer
+     * @param Signer   $signer
+     * @param string[] $claims
      */
-    public function __construct(Signer $signer)
+    public function __construct(Signer $signer, array $claims)
     {
         $this->createdAt = Carbon::now()->toMutable();
         $this->expiredAt = $this->createdAt;
         $this->signer    = $signer;
+        $this->claims    = $claims;
     }
 
     /**
@@ -207,6 +216,10 @@ class AccessToken implements AccessTokenEntityInterface
         $builder->setNotBefore($this->createdAt->getTimestamp());
         $builder->setExpiration($this->expiredAt->getTimestamp());
         $builder->set('scopes', $this->scopes);
+
+        foreach ($this->claims ?: [] as $claim => $value) {
+            $builder->set($claim, $value);
+        }
 
         $key = new Signer\Key($privateKey->getKeyPath(), $privateKey->getPassPhrase());
         $builder->sign($this->signer, $key);

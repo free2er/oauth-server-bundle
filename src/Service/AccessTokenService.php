@@ -35,6 +35,13 @@ class AccessTokenService implements OAuthAccessTokenServiceInterface
     private $repository;
 
     /**
+     * Провайдеры параметров JWT
+     *
+     * @var ClaimProviderInterface[]
+     */
+    private $providers = [];
+
+    /**
      * Конструктор
      *
      * @param Signer                         $signer
@@ -44,6 +51,16 @@ class AccessTokenService implements OAuthAccessTokenServiceInterface
     {
         $this->signer     = $signer;
         $this->repository = $repository;
+    }
+
+    /**
+     * Добавляет провайдер параметров JWT
+     *
+     * @param ClaimProviderInterface $provider
+     */
+    public function addProvider(ClaimProviderInterface $provider): void
+    {
+        $this->providers[] = $provider;
     }
 
     /**
@@ -57,7 +74,15 @@ class AccessTokenService implements OAuthAccessTokenServiceInterface
      */
     public function getNewToken(ClientEntityInterface $client, array $scopes, $user = null)
     {
-        return new AccessToken($this->signer);
+        $client = (string) $client->getIdentifier();
+        $user   = (string) $user;
+        $claims = [];
+
+        foreach ($this->providers as $provider) {
+            $claims = array_merge($claims, $provider->getClaims($client, $user));
+        }
+
+        return new AccessToken($this->signer, $claims);
     }
 
     /**

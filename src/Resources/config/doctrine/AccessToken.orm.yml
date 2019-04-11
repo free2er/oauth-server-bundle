@@ -12,6 +12,9 @@ Free2er\OAuth\Entity\AccessToken:
             length: 255
             options:
                 default: ''
+        claims:
+            type: json
+            nullable: true
         scopes:
             type: simple_array
             nullable: true
