@@ -44,7 +44,7 @@ class OAuthServerExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $this->injectSigner($container, $config);
-        $this->injectTTL($container, $config);
+        $this->injectTtl($container, $config);
         $this->injectAuthorizationServer($container, $config);
         $this->injectClientCredentialsGrant($container);
         $this->injectPasswordGrant($container);
@@ -73,7 +73,7 @@ class OAuthServerExtension extends Extension
      * @param ContainerBuilder $container
      * @param array            $config
      */
-    private function injectTTL(ContainerBuilder $container, array $config): void
+    private function injectTtl(ContainerBuilder $container, array $config): void
     {
         foreach ($config['ttl'] as $name => $time) {
             $name = sprintf('oauth_server.%s_ttl', $name);

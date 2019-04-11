@@ -22,6 +22,7 @@ abstract class AbstractCommand extends Command
      * @param callable        $renderer
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
      * @return int
      */
     protected function table(
