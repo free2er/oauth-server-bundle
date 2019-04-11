@@ -35,15 +35,11 @@ o_auth_server:
         access_token: PT1H
         authorization_code: PT1H
         refresh_token: P1M
-    grant_types:
-        - Free2er\OAuth\Grant\AuthorizationCodeGrant
-        - Free2er\OAuth\Grant\ClientCredentialsGrant
-        - Free2er\OAuth\Grant\PasswordGrant
-        - Free2er\OAuth\Grant\RefreshTokenGrant
-    refresh_token:
-        - Free2er\OAuth\Grant\AuthorizationCodeGrant
-        - Free2er\OAuth\Grant\PasswordGrant
-        - Free2er\OAuth\Grant\RefreshTokenGrant    
+    grants:
+        - League\OAuth2\Server\Grant\ClientCredentialsGrant
+        - League\OAuth2\Server\Grant\PasswordGrant
+        - League\OAuth2\Server\Grant\AuthCodeGrant
+        - League\OAuth2\Server\Grant\RefreshTokenGrant
 ```
 
 5. Configure the router

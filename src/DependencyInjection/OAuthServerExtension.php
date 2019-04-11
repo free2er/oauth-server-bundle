@@ -10,11 +10,13 @@ use Free2er\OAuth\Service\AuthorizationCodeService;
 use Free2er\OAuth\Service\ClientService;
 use Free2er\OAuth\Service\RefreshTokenService;
 use Free2er\OAuth\Service\ScopeService;
+use Free2er\OAuth\Service\UserService;
 use Lcobucci\JWT\Signer;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -88,7 +90,7 @@ class OAuthServerExtension extends Extension
 
         $accessTokenTTL = new Definition(DateInterval::class, [$config['ttl']['access_token']]);
 
-        foreach ($config['grant_types'] as $grant) {
+        foreach ($config['grants'] as $grant) {
             $server->addMethodCall('enableGrantType', [new Reference($grant), $accessTokenTTL]);
         }
 
@@ -114,7 +116,17 @@ class OAuthServerExtension extends Extension
      */
     private function injectPasswordGrant(ContainerBuilder $container, array $config): void
     {
-        // TODO: not implemented yet
+        $userService         = new Reference(UserService::class);
+        $refreshTokenService = new Reference(RefreshTokenService::class);
+        $refreshTokenTTL     = new Definition(DateInterval::class, [$config['ttl']['refresh_token']]);
+
+        $grant = new Definition(PasswordGrant::class, [
+            $userService,
+            $refreshTokenService,
+        ]);
+
+        $grant->addMethodCall('setRefreshTokenTTL', [$refreshTokenTTL]);
+        $container->setDefinition(PasswordGrant::class, $grant);
     }
 
     /**

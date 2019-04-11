@@ -37,10 +37,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('refresh_token')->defaultValue('P1M')->end()
                     ->end()
                 ->end()
-                ->arrayNode('grant_types')
-                    ->scalarPrototype()->cannotBeEmpty()->end()
-                ->end()
-                ->arrayNode('refresh_token')
+                ->arrayNode('grants')
                     ->scalarPrototype()->cannotBeEmpty()->end()
                 ->end()
             ->end();
