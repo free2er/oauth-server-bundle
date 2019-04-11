@@ -46,8 +46,9 @@ class ClientUpdateCommand extends AbstractCommand
         $this->addArgument('client', InputArgument::REQUIRED, 'Client ID');
         $this->addOption('secret', 'p', InputOption::VALUE_OPTIONAL, 'Secret', '');
         $this->addOption('cost', 'c', InputOption::VALUE_REQUIRED, 'Secret cost');
-        $this->addOption('grant', 'g', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Grant type');
-        $this->addOption('scope', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Scope');
+        $this->addOption('uri', 'u', InputOption::VALUE_OPTIONAL, 'Redirect URI', '');
+        $this->addOption('grants', 'g', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Grant type');
+        $this->addOption('scopes', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Scope');
         $this->addOption('revoke', 'r', InputOption::VALUE_NONE, 'Revoke grant type or scope');
     }
 

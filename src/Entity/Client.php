@@ -100,7 +100,7 @@ class Client implements ClientEntityInterface
      */
     public function hasSecret(): bool
     {
-        return $this->secret === '';
+        return $this->secret !== '';
     }
 
     /**
@@ -132,11 +132,7 @@ class Client implements ClientEntityInterface
             return;
         }
 
-        if ($cost <= 0) {
-            $cost = 14;
-        }
-
-        $this->secret = (string) password_hash($secret, PASSWORD_BCRYPT, ['cost' => $cost]);
+        $this->secret = (string) password_hash($secret, PASSWORD_BCRYPT, $cost > 0 ? ['cost' => $cost] : null);
     }
 
     /**

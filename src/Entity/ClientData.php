@@ -19,9 +19,16 @@ class ClientData
     /**
      * Количество итераций шифрования пароля
      *
-     * @var int|null
+     * @var string|null
      */
     private $cost;
+
+    /**
+     * URI перенаправления
+     *
+     * @var string|null
+     */
+    private $uri;
 
     /**
      * Допустимые типы авторизации
@@ -53,6 +60,7 @@ class ClientData
     {
         $this->secret = $data['secret'] ?? null;
         $this->cost   = $data['cost'] ?? null;
+        $this->uri    = $data['uri'] ?? null;
         $this->grants = $data['grants'] ?? [];
         $this->scopes = $data['scopes'] ?? [];
         $this->revoke = $data['revoke'] ?? false;
@@ -66,7 +74,11 @@ class ClientData
     public function apply(Client $client): void
     {
         if ($this->secret !== null) {
-            $client->setSecret($this->secret, $this->cost);
+            $client->setSecret($this->secret, intval($this->cost) ?: null);
+        }
+
+        if ($this->uri !== null) {
+            $client->setRedirectUri($this->uri);
         }
 
         if ($this->grants && !$this->revoke) {
