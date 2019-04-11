@@ -122,10 +122,10 @@ class Client implements ClientEntityInterface
     /**
      * Устанавливает пароль
      *
-     * @param string $secret
-     * @param int    $cost
+     * @param string   $secret
+     * @param int|null $cost
      */
-    public function setSecret(string $secret, int $cost = 14): void
+    public function setSecret(string $secret, int $cost = null): void
     {
         if (!$secret) {
             $this->secret = '';
@@ -182,13 +182,23 @@ class Client implements ClientEntityInterface
     }
 
     /**
-     * Устанавливает допустимые типы авторизации
+     * Включает типы авторизации
      *
      * @param string[] $grants
      */
-    public function setGrants(array $grants): void
+    public function enableGrants(array $grants): void
     {
-        $this->grants = $grants;
+        $this->grants = array_unique(array_merge($this->grants, $grants));
+    }
+
+    /**
+     * Выключает типы авторизации
+     *
+     * @param string[] $grants
+     */
+    public function disableGrants(array $grants): void
+    {
+        $this->grants = array_diff($this->grants, $grants);
     }
 
     /**
@@ -202,13 +212,23 @@ class Client implements ClientEntityInterface
     }
 
     /**
-     * Устанавливает права доступа
+     * Включает права доступа
      *
      * @param string[] $scopes
      */
-    public function setScopes(array $scopes): void
+    public function enableScopes(array $scopes): void
     {
-        $this->scopes = $scopes;
+        $this->scopes = array_unique(array_merge($this->scopes, $scopes));
+    }
+
+    /**
+     * Выключает права доступа
+     *
+     * @param string[] $scopes
+     */
+    public function disableScopes(array $scopes): void
+    {
+        $this->scopes = array_diff($this->scopes, $scopes);
     }
 
     /**

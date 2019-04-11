@@ -12,6 +12,13 @@ use Free2er\OAuth\Entity\Client;
 interface ClientRepositoryInterface
 {
     /**
+     * Возвращает список клиентов
+     *
+     * @return Client[]
+     */
+    public function getClients(): array;
+
+    /**
      * Возвращает клиента
      *
      * @param string $id

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Free2er\OAuth\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\ORMException;
 use Free2er\OAuth\Entity\Client;
@@ -27,6 +28,16 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Client::class);
+    }
+
+    /**
+     * Возвращает список клиентов
+     *
+     * @return Client[]
+     */
+    public function getClients(): array
+    {
+        return $this->findBy([], ['id' => Criteria::ASC]);
     }
 
     /**

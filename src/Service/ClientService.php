@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Free2er\OAuth\Service;
 
 use Free2er\OAuth\Entity\Client;
+use Free2er\OAuth\Entity\ClientData;
 use Free2er\OAuth\Repository\ClientRepositoryInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface as OAuthClientServiceInterface;
@@ -32,6 +33,16 @@ class ClientService implements OAuthClientServiceInterface, ClientServiceInterfa
     }
 
     /**
+     * Возвращает список клиентов
+     *
+     * @return Client[]
+     */
+    public function getClients(): array
+    {
+        return $this->repository->getClients();
+    }
+
+    /**
      * Возвращает клиента
      *
      * @param string $id
@@ -41,6 +52,50 @@ class ClientService implements OAuthClientServiceInterface, ClientServiceInterfa
     public function getClient(string $id): ?Client
     {
         return $this->repository->getClient($id);
+    }
+
+    /**
+     * Изменяет сведения о клиенте
+     *
+     * @param Client     $client
+     * @param ClientData $data
+     */
+    public function update(Client $client, ClientData $data): void
+    {
+        $data->apply($client);
+        $this->repository->save($client);
+    }
+
+    /**
+     * Блокирует клиента
+     *
+     * @param Client $client
+     */
+    public function lock(Client $client): void
+    {
+        $client->lock();
+        $this->repository->save($client);
+    }
+
+    /**
+     * Разблокирует клиента
+     *
+     * @param Client $client
+     */
+    public function unlock(Client $client): void
+    {
+        $client->unlock();
+        $this->repository->save($client);
+    }
+
+    /**
+     * Удаляет клиента
+     *
+     * @param Client $client
+     */
+    public function remove(Client $client): void
+    {
+        $this->repository->remove($client);
     }
 
     /**

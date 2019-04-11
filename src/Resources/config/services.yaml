@@ -3,6 +3,11 @@ services:
         autoconfigure: true
         autowire: true
 
+    # Консольные команды
+    Free2er\OAuth\Command\:
+        resource: '../../Command'
+        tags: ['console.command']
+
     # Контроллеры
     Free2er\OAuth\Controller\:
         resource: '../../Controller'
