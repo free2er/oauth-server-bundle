@@ -38,7 +38,7 @@ class ClientService implements OAuthClientServiceInterface
      * @param string|null $secret
      * @param bool        $mustValidateSecret
      *
-     * @return ClientEntityInterface
+     * @return ClientEntityInterface|null
      */
     public function getClientEntity($id, $grant = null, $secret = null, $mustValidateSecret = true)
     {
