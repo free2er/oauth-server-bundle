@@ -90,11 +90,11 @@ class ClientData
         }
 
         if ($this->scopes && !$this->revoke) {
-            $client->enableScopes($this->grants);
+            $client->enableScopes($this->scopes);
         }
 
         if ($this->scopes && $this->revoke) {
-            $client->disableScopes($this->grants);
+            $client->disableScopes($this->scopes);
         }
     }
 }
