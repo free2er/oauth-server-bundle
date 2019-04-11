@@ -132,7 +132,7 @@ class Client implements ClientEntityInterface
             return;
         }
 
-        $this->secret = (string) password_hash($secret, PASSWORD_BCRYPT, $cost > 0 ? ['cost' => $cost] : null);
+        $this->secret = (string) password_hash($secret, PASSWORD_BCRYPT, $cost > 0 ? ['cost' => $cost] : []);
     }
 
     /**
